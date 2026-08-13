@@ -324,7 +324,7 @@ def test_write_pool_explicit_status_reset_overrides_binding_disk_cooldown(classi
         reset_status_ids=["cred-x"],
     )
 
-    data = json.loads((classic_env / "auth.json").read_text())
+    data = json.loads((classic_env / "auth.json").read_text(encoding="utf-8"))
     persisted = {
         entry["id"]: entry
         for entry in data["credential_pool"]["openrouter"]

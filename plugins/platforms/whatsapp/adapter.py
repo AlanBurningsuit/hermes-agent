@@ -1008,12 +1008,13 @@ class WhatsAppAdapter(WhatsAppBehaviorMixin, BasePlatformAdapter):
             return SendResult(success=False, error=bridge_exit)
         try:
             import aiohttp
+            formatted = self.format_message(content)
             async with self._http_session.post(
                 f"http://127.0.0.1:{self._bridge_port}/edit",
                 json={
                     "chatId": to_whatsapp_jid(chat_id),
                     "messageId": message_id,
-                    "message": content,
+                    "message": formatted,
                 },
                 timeout=aiohttp.ClientTimeout(total=15)
             ) as resp:

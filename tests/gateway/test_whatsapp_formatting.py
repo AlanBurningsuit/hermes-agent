@@ -111,6 +111,26 @@ class TestFormatMessage:
         assert adapter.format_message("_italic_") == "_italic_"
 
 
+class TestEditMessage:
+    """WhatsApp edits use the same formatting pipeline as sends."""
+
+    @pytest.mark.asyncio
+    async def test_formats_markdown_before_delivery(self):
+        adapter = _make_adapter()
+        resp = MagicMock(status=200)
+        adapter._http_session.post = MagicMock(return_value=_AsyncCM(resp))
+
+        result = await adapter.edit_message(
+            "chat1",
+            "msg1",
+            "**Findings** and **59 passed**",
+        )
+
+        assert result.success
+        payload = adapter._http_session.post.call_args.kwargs["json"]
+        assert payload["message"] == "*Findings* and *59 passed*"
+
+
 # ---------------------------------------------------------------------------
 # MAX_MESSAGE_LENGTH tests
 # ---------------------------------------------------------------------------
